@@ -1,25 +1,81 @@
 package delivery.domain;
 
-import delivery.domain.*;
-import delivery.infra.AbstractEvent;
-import java.util.*;
-import lombok.*;
+import delivery.domain.Order;
+import delivery.FrontendApplication;
+import javax.persistence.*;
+import java.util.List;
+import lombok.Data;
+import java.util.Date;
 
+@Entity
+@Table(name="Order_table")
 @Data
-@ToString
-public class Order extends AbstractEvent {
 
+public class Order  {
+
+    
+    @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    
+    
+    
+    
+    
     private Long id;
+    
+    
+    
+    
+    
     private String foodId;
+    
+    
+    
+    
+    
     private String customerId;
+    
+    
+    
+    
+    
     private String options;
-    private Address address;
+    
+    
+    
+    
+    
+    private String address;
+    
+    
+    
+    
+    
     private String status;
 
-    public Order(Order aggregate){
-        super(aggregate);
+    @PostPersist
+    public void onPostPersist(){
+
+
+        Order order = new Order(this);
+        order.publishAfterCommit();
+
     }
-    public Order(){
-        super();
+    @PrePersist
+    public void onPrePersist(){
     }
+    @PreRemove
+    public void onPreRemove(){
+    }
+
+    public static OrderRepository repository(){
+        OrderRepository orderRepository = FrontendApplication.applicationContext.getBean(OrderRepository.class);
+        return orderRepository;
+    }
+
+
+
+
+
+
 }
